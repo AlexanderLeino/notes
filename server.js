@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs')
 const uuid = require('uuid')
+const path = require('path')
 
 
 const app = express()
@@ -17,19 +18,13 @@ app.use(express.urlencoded({extended:true}))
 // * `GET /notes` should return the `notes.html` file.
 app.get('/notes', (req,res) => {
     
-    res.sendFile('public/notes.html', 'utf8', (err,data) => {
-        if(err) {
-            console.log(err)
-            return
-        }
-        console.log(data)
-    })
-
+    res.sendFile(path.join(__dirname, '/public/notes.html'))
 })
         
 // * `GET *` should return the `index.html` file.
 app.get('/', (req,res) => {
 
+    res.sendFile(path.join(__dirname, '/public/index.html'))
 
 })
 // The following API routes should be created:
