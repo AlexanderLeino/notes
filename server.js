@@ -1,8 +1,8 @@
 const express = require('express');
 const fs = require('fs')
-const uuid = require('uuid')
 const path = require('path')
 
+let noteArray = []
 
 const app = express()
 const PORT = 3001
@@ -31,11 +31,39 @@ app.get('/', (req,res) => {
 
 // * `GET /api/notes` should read the `db.json` file and return all saved notes as JSON.
 app.get('/api/notes', (req,res) => {
-    fs.readFile('db/db.json')
-    res.json('/db/db.json')
+    fs.readFile('./db/db.json', 'utf-8', (err,data) => {
+        if (err) throw err
+       res.json(JSON.parse(data))
+    })
 })
+
 // * `POST /api/notes` should receive a new note to save on the request body, add it to the `db.json` file, and then return the new note to the client. You'll need to find a way to give each note a unique id when it's saved (look into npm packages that could do this for you).
+
 app.post('/api/notes', (req, res) => {
+    console.log(req.method + "route hit")
+    if(req.body.title && req.body.text) {
+        const newNote = {
+            title: req.body.title,
+            type: req.body.text,
+            id: Math.floor(Math.random()*1000)
+        }
+        console.log('Saving Note....', newNote)
+        // read the json file
+
+        fs.readFile('./db/db.json', 'utf-8', (err,data) => {
+            if (err) throw err
+            console.log(data)
+            const parsedNotes = JSON.parse(data)
+            parsedNotes.push(newNote)
+            let stringifyNotes = JSON.stringify(parsedNotes)
+            fs.writeFile('./db/db.json', stringifyNotes, (err) => {
+                if (err) throw err
+                res.status(200).send('Note has been saved')
+            })
+        })
+    } else {
+        res.status(400).send('You didnt send sufficient information for a note to be generated.')
+    }
 
 })
 
