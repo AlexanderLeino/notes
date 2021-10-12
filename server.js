@@ -2,8 +2,6 @@ const express = require('express');
 const fs = require('fs')
 const path = require('path')
 
-let noteArray = []
-
 const app = express()
 const PORT = 3001
 
@@ -68,7 +66,28 @@ app.post('/api/notes', (req, res) => {
 })
 
 
-
+app.delete('/api/notes/:id', (req,res) => {
+    fs.readFile('./db/db.json', 'utf-8', (err,data) => {
+        const deleteNote = req.params.id
+        if (err) throw err
+        console.log(data)
+        const noteArray = JSON.parse(data)
+        const filteredNoteArray = noteArray.filter( note =>{
+            if(deleteNote != note.id) {
+                return true
+            }
+            else {
+                return false
+            }
+        })
+        
+        let stringifyFilteredNoteArray = JSON.stringify(filteredNoteArray)
+        fs.writeFile('./db/db.json',stringifyFilteredNoteArray, (err) => {
+            if (err) throw err
+            res.status(200).send('Note has been deleted')
+        })
+    })
+})
 
 
 
