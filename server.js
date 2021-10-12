@@ -42,7 +42,7 @@ app.post('/api/notes', (req, res) => {
     if(req.body.title && req.body.text) {
         const newNote = {
             title: req.body.title,
-            type: req.body.text,
+            text: req.body.text,
             id: Math.floor(Math.random()*1000)
         }
         console.log('Saving Note....', newNote)
