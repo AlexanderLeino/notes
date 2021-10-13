@@ -72,7 +72,7 @@ app.delete('/api/notes/:id', (req,res) => {
         if (err) throw err
         console.log(data)
         const noteArray = JSON.parse(data)
-        const filteredNoteArray = noteArray.filter( note =>{
+        const filteredNoteArray = noteArray.filter( note => {
             if(deleteNote != note.id) {
                 return true
             }
